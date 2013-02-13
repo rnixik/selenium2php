@@ -28,7 +28,7 @@ class CliController {
     protected $_phpFilePrefix = '';
     protected $_phpFilePostfix = 'Test';
     protected $_destFolder = '';
-
+    protected $_sourceBaseDir = '';
 
     public function __construct() {
         require_once 'Converter.php';
@@ -131,6 +131,7 @@ class CliController {
                         } else {
                             $phpFileName = '';
                         }
+                        $this->_sourceBaseDir = rtrim(dirname($htmlFileName), "\\/")."/";
                         $this->convertFile($htmlFileName, $phpFileName);
                         print "OK.\n";
                         exit(0);
@@ -140,6 +141,7 @@ class CliController {
                     }
                 } else if (is_dir($first)) {
                     $dir = rtrim($first, "\\/")."/";
+                    $this->_sourceBaseDir = $dir;
                     $this->convertFilesInDirectory($dir);
                 } else {
                     print "\"$first\" is not existing file or directory.\n";
@@ -170,11 +172,21 @@ class CliController {
             $result = $this->_converter->convert($htmlContent);
             if (!$phpFileName) {
                 $fileName = basename($htmlFileName);
+                
                 if ($this->_destFolder){
                     $filePath = rtrim($this->_destFolder, "\\/") . "/";
+                    if (!realpath($filePath)){
+                        //path is not absolute
+                        $filePath = $this->_sourceBaseDir . $filePath;
+                        if (!realpath($filePath)){
+                            print "Directory \"$filePath\" not found.\n";
+                            exit(1);
+                        }
+                    }
                 } else {
                     $filePath = dirname($htmlFileName) . "/";
                 }
+                
                 $phpFileName = $filePath . $this->_phpFilePrefix 
                         . preg_replace("/\.html$/", '', $fileName) 
                         . $this->_phpFilePostfix . ".php";
