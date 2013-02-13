@@ -26,7 +26,7 @@ class CliController {
     protected $_htmlPattern = "*.html";
     protected $_recursive = false;
     protected $_phpFilePrefix = '';
-    protected $_phpFilePostfix = '';
+    protected $_phpFilePostfix = 'Test';
     protected $_destFolder = '';
 
 
