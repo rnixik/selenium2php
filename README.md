@@ -17,7 +17,7 @@ PHP code for PHPUnit_Extensions_SeleniumTestCase as TestCase file.
     --remote-host=<host>           Set Selenium server address for tests.
     --remote-port=<port>           Set Selenium server port for tests.
     -r|--recursive                 Use subdirectories for converting.
-
+    --class-prefix=<prefix>        Set TestCase class prefix.
 
 ###License
     Copyright 2013 Rnix Valentine

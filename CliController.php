@@ -55,6 +55,7 @@ class CliController {
         print "  --remote-host=<host>           Set Selenium server address for tests.\n";
         print "  --remote-port=<port>           Set Selenium server port for tests.\n";
         print "  -r|--recursive                 Use subdirectories for converting.\n";
+        print "  --class-prefix=<prefix>        Set TestCase class prefix.\n";
     }
     
     protected function _applyOptionsAndFlags($options, $flags){
@@ -91,6 +92,9 @@ class CliController {
                             break;
                         case 'dest':
                             $this->_destFolder = $opt[1];
+                            break;
+                        case 'class-prefix':
+                            $this->_converter->setTplClassPrefix($opt[1]);
                             break;
                         default:
                             print "Unknown option \"{$opt[0]}\".\n";

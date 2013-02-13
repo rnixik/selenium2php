@@ -38,6 +38,7 @@ class Converter {
      * @var array 
      */
     protected $_tplPreClass = array();
+    protected $_tplClassPrefix = '';
     protected $_tplParentClass = 'PHPUnit_Extensions_SeleniumTestCase';
     
     /**
@@ -175,7 +176,7 @@ class Converter {
     }
     
     protected function _composeClassName(){
-        return $this->_prepareName() . "Test";
+        return $this->_tplClassPrefix . $this->_prepareName() . "Test";
     }
     
     protected function _composeTestMethodName(){
@@ -283,5 +284,9 @@ class Converter {
      */
     public function setTplParentClass($className){
         $this->_tplParentClass = $className;
+    }
+    
+    public function setTplClassPrefix($prefix){
+        $this->_tplClassPrefix = $prefix;
     }
 }
