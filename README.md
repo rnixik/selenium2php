@@ -9,6 +9,7 @@ PHP code for PHPUnit_Extensions_SeleniumTestCase as TestCase file.
     selenium2php [switches] Test.html [Test.php]
     selenium2php [switches] <directory>
     
+    --dest=<path>                  Destination folder.
     --php-prefix=<string>          Add prefix to php filenames.
     --php-postfix=<string>         Add postfix to php filenames.
     --browser=<browsers string>    Set browser for tests.
