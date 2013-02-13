@@ -27,6 +27,7 @@ class CliController {
     protected $_recursive = false;
     protected $_phpFilePrefix = '';
     protected $_phpFilePostfix = '';
+    protected $_destFolder = '';
 
 
     public function __construct() {
@@ -46,6 +47,7 @@ class CliController {
         print "       selenium2php [switches] <directory>";
         print "\n";
         print "\n";      
+        print "  --dest=<path>                  Destination folder.\n";
         print "  --php-prefix=<string>          Add prefix to php filenames.\n";
         print "  --php-postfix=<string>         Add postfix to php filenames.\n";
         print "  --browser=<browsers string>    Set browser for tests.\n";
@@ -86,6 +88,9 @@ class CliController {
                             break;
                         case 'remote-port':
                             $this->_converter->setRemotePort($opt[1]);
+                            break;
+                        case 'dest':
+                            $this->_destFolder = $opt[1];
                             break;
                         default:
                             print "Unknown option \"{$opt[0]}\".\n";
@@ -134,7 +139,7 @@ class CliController {
                         exit(1);
                     }
                 } else if (is_dir($first)) {
-                    $dir = rtrim($first, "\/")."/";
+                    $dir = rtrim($first, "\\/")."/";
                     $this->convertFilesInDirectory($dir);
                 } else {
                     print "\"$first\" is not existing file or directory.\n";
@@ -165,7 +170,11 @@ class CliController {
             $result = $this->_converter->convert($htmlContent);
             if (!$phpFileName) {
                 $fileName = basename($htmlFileName);
-                $filePath = dirname($htmlFileName) . "/";
+                if ($this->_destFolder){
+                    $filePath = rtrim($this->_destFolder, "\\/") . "/";
+                } else {
+                    $filePath = dirname($htmlFileName) . "/";
+                }
                 $phpFileName = $filePath . $this->_phpFilePrefix 
                         . preg_replace("/\.html$/", '', $fileName) 
                         . $this->_phpFilePostfix . ".php";
