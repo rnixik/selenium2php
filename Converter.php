@@ -77,7 +77,8 @@ class Converter {
                 $this->_testUrl = $html->find('link', 0)->href;
             }
             if (!$this->_testName) {
-                $this->_testName = $html->find('title', 0)->innertext;
+                $title = $html->find('title', 0)->innertext;
+                $this->_testName = preg_replace('/[^A-Za-z0-9]/', '_', ucwords($title));
             }
             
             foreach ($html->find('table tr') as $row) {
@@ -103,9 +104,11 @@ class Converter {
      * Converts HTML text of Selenium test case into PHP code
      * 
      * @param string $htmlStr content of html file with Selenium test case
+     * @param string $testName test class name (leave blank for auto)
      * @return string PHP test case file content
      */
-    public function convert($htmlStr){
+    public function convert($htmlStr, $testName = ''){
+        $this->_testName = $testName;
         $this->_parseHtml($htmlStr);
         $lines = $this->_composeLines();
         return $this->_composeStr($lines);
@@ -171,16 +174,12 @@ class Converter {
         return str_repeat(" ", $size);
     }
     
-    protected function _prepareName(){
-        return preg_replace('/[^A-Za-z0-9]/', '_', ucwords($this->_testName));
-    }
-    
     protected function _composeClassName(){
-        return $this->_tplClassPrefix . $this->_prepareName() . "Test";
+        return $this->_tplClassPrefix . $this->_testName . "Test";
     }
     
     protected function _composeTestMethodName(){
-        return "test" . $this->_prepareName();
+        return "test" . $this->_testName;
     }
     
     protected function _composeSetupMethodContent(){
@@ -232,10 +231,6 @@ class Converter {
         $lines[] = "*/";
         $line = implode($this->_tplEOL, $lines);
         return $line;
-    }
-    
-    public function setTestName($testName){
-        $this->_testName = $testName;
     }
     
     public function setTestUrl($testUrl){
