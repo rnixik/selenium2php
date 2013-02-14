@@ -246,9 +246,7 @@ class CliController {
             $absPath = str_replace('/', '_', $absPath);
             $destPath = str_replace('\\', '_', $this->_sourceBaseDir);
             $destPath = str_replace('/', '_', $destPath);
-            print "del $destPath from $absPath \n";
             $testName= str_replace($destPath, '', $absPath);
-            print $testName."\n";
         }
         
         $testName = ucfirst(preg_replace("/\..+$/", '', $testName));
