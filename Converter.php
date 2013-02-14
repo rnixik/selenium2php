@@ -208,8 +208,8 @@ class Converter {
         
         foreach ($this->_commands as $row){
             $command = $row['command'];
-            $target  = html_entity_decode(str_replace('&nbsp;', ' ', $row['target']));
-            $value   = $row['value'];
+            $target  = $this->_prepareHtml($row['target']);
+            $value   = $this->_prepareHtml($row['value']);
             $res = $commands->$command($target, $value);
             if (is_string($res)){
                 $mLines[] = $res;
@@ -222,6 +222,14 @@ class Converter {
         }
         
         return $mLines;
+    }
+    
+    protected function _prepareHtml($html){
+        $res = $html;
+        $res = str_replace('&nbsp;', ' ', $res);
+        $res = html_entity_decode($res);
+        $res = str_replace('<br />', '\n', $res);
+        return $res;
     }
     
     protected function _composeComment(){
