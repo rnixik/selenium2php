@@ -109,6 +109,7 @@ class Converter {
      */
     public function convert($htmlStr, $testName = ''){
         $this->_testName = $testName;
+        $this->_commands = array();
         $this->_parseHtml($htmlStr);
         $lines = $this->_composeLines();
         return $this->_composeStr($lines);
