@@ -186,38 +186,78 @@ class CliController {
         return false;
     }
     
+    protected function _makeOutputFilename($htmlFileName, $htmlContent) {
+        $fileName = $this->_makeTestName($htmlFileName);
+
+        if ($this->_destFolder) {
+            $filePath = rtrim($this->_destFolder, "\\/") . "/";
+            if (!realpath($filePath)) {
+                //path is not absolute
+                $filePath = $this->_sourceBaseDir . $filePath;
+                if (!realpath($filePath)) {
+                    print "Directory \"$filePath\" not found.\n";
+                    exit(1);
+                }
+            }
+        } else {
+            $filePath = dirname($htmlFileName) . "/";
+        }
+
+        if ($this->_useHashFilePostfix) {
+            $hashPostfix = '_' . substr(md5($htmlContent), 0, 8) . '_';
+        } else {
+            $hashPostfix = '';
+        }
+
+        $phpFileName = $filePath . $this->_phpFilePrefix
+                . preg_replace("/\..+$/", '', $fileName)
+                . $hashPostfix
+                . $this->_phpFilePostfix . ".php";
+        return $phpFileName;
+    }
+    
+    /**
+     * Makes output test name considering path.
+     * 
+     * If destination folder is not defined
+     * returns base name of html file without extension.
+     * Example: 
+     * auth/login/simple.html -> simple
+     * 
+     * If destination folder is defined
+     * returns base name of html file prefixed with
+     * name of folder accordingly to destination folder.
+     * Example:
+     * auth/login/simple.html -> Auth_login_simple
+     * 
+     * @param string $htmlFileName input file name
+     * @return string output test name
+     */
+    protected function _makeTestName($htmlFileName){
+        /* get from file if this is empty */
+        $testName = basename($htmlFileName);
+        
+        if ($this->_destFolder) {
+            $absPath = str_replace('\\', '_', $htmlFileName);
+            $absPath = str_replace('/', '_', $absPath);
+            $destPath = str_replace('\\', '_', $this->_sourceBaseDir);
+            $destPath = str_replace('/', '_', $destPath);
+            print "del $destPath from $absPath \n";
+            $testName= str_replace($destPath, '', $absPath);
+            print $testName."\n";
+        }
+        
+        $testName = ucfirst(preg_replace("/\..+$/", '', $testName));
+        return $testName;
+    }
+    
     public function convertFile($htmlFileName, $phpFileName = '') {
         $htmlContent = file_get_contents($htmlFileName);
         if ($htmlContent) {
-            $result = $this->_converter->convert($htmlContent);
             if (!$phpFileName) {
-                $fileName = basename($htmlFileName);
-                
-                if ($this->_destFolder){
-                    $filePath = rtrim($this->_destFolder, "\\/") . "/";
-                    if (!realpath($filePath)){
-                        //path is not absolute
-                        $filePath = $this->_sourceBaseDir . $filePath;
-                        if (!realpath($filePath)){
-                            print "Directory \"$filePath\" not found.\n";
-                            exit(1);
-                        }
-                    }
-                } else {
-                    $filePath = dirname($htmlFileName) . "/";
-                }
-                
-                if ($this->_useHashFilePostfix) {
-                    $hashPostfix = '_' . substr(md5($htmlContent), 0, 8) . '_';
-                } else {
-                    $hashPostfix = '';
-                }
-                
-                $phpFileName = $filePath . $this->_phpFilePrefix 
-                        . preg_replace("/\.html$/", '', $fileName) 
-                        . $hashPostfix
-                        . $this->_phpFilePostfix . ".php";
+                $phpFileName = $this->_makeOutputFilename($htmlFileName, $htmlContent);
             }
+            $result = $this->_converter->convert($htmlContent, $this->_makeTestName($htmlFileName));
             file_put_contents($phpFileName, $result);
             print $phpFileName."\n";
         }
