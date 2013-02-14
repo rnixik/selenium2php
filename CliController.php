@@ -29,6 +29,7 @@ class CliController {
     protected $_phpFilePostfix = 'Test';
     protected $_destFolder = '';
     protected $_sourceBaseDir = '';
+    protected $_useHashFilePostfix = false;
 
     public function __construct() {
         require_once 'Converter.php';
@@ -56,6 +57,7 @@ class CliController {
         print "  --remote-port=<port>           Set Selenium server port for tests.\n";
         print "  -r|--recursive                 Use subdirectories for converting.\n";
         print "  --class-prefix=<prefix>        Set TestCase class prefix.\n";
+        print "  --use-hash-postfix             Add hash part to output filename.\n";
     }
     
     protected function _applyOptionsAndFlags($options, $flags){
@@ -65,6 +67,9 @@ class CliController {
                     switch ($opt){
                         case 'recursive':
                             $this->_recursive = true;
+                            break;
+                        case 'use-hash-postfix':
+                            $this->_useHashFilePostfix = true;
                             break;
                         default:
                             print "Unknown option \"$opt\".\n";
@@ -95,6 +100,9 @@ class CliController {
                             break;
                         case 'class-prefix':
                             $this->_converter->setTplClassPrefix($opt[1]);
+                            break;
+                        case 'use-hash-postfix':
+                            $this->_useHashFilePostfix = true;
                             break;
                         default:
                             print "Unknown option \"{$opt[0]}\".\n";
@@ -146,7 +154,13 @@ class CliController {
                 } else if (is_dir($first)) {
                     $dir = rtrim($first, "\\/")."/";
                     $this->_sourceBaseDir = $dir;
-                    $this->convertFilesInDirectory($dir);
+                    $res = $this->convertFilesInDirectory($dir);
+                    if ($res){
+                        print "OK.\n";
+                        exit(0);
+                    } else {
+                        exit(1);
+                    }
                 } else {
                     print "\"$first\" is not existing file or directory.\n";
                     exit(1);
@@ -165,9 +179,11 @@ class CliController {
             foreach ($files as $htmlFile){
                 $this->convertFile($htmlFile);
             }
+            return true;
         } else {
             print "Files \"{$this->_htmlPattern}\" not found in \"$dir\".";
         }
+        return false;
     }
     
     public function convertFile($htmlFileName, $phpFileName = '') {
@@ -191,8 +207,15 @@ class CliController {
                     $filePath = dirname($htmlFileName) . "/";
                 }
                 
+                if ($this->_useHashFilePostfix) {
+                    $hashPostfix = '_' . substr(md5($htmlContent), 0, 8) . '_';
+                } else {
+                    $hashPostfix = '';
+                }
+                
                 $phpFileName = $filePath . $this->_phpFilePrefix 
                         . preg_replace("/\.html$/", '', $fileName) 
+                        . $hashPostfix
                         . $this->_phpFilePostfix . ".php";
             }
             file_put_contents($phpFileName, $result);
