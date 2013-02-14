@@ -19,6 +19,7 @@ PHP code for PHPUnit_Extensions_SeleniumTestCase as TestCase file.
     -r|--recursive                 Use subdirectories for converting.
     --class-prefix=<prefix>        Set TestCase class prefix.
     --use-hash-postfix             Add hash part to output filename
+    --files-pattern=<pattern>      Glob pattern for input test files (*.html).
 
 ###License
     Copyright 2013 Rnix Valentine

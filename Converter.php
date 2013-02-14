@@ -71,7 +71,7 @@ class Converter {
     protected function _parseHtml($htmlStr){
         require_once 'libs/simple_html_dom.php';
         $html = str_get_html($htmlStr);
-        if ($html){
+        if ($html && $html->find('link')){
             
             if (!$this->_testUrl){
                 $this->_testUrl = $html->find('link', 0)->href;

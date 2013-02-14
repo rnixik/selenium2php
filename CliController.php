@@ -58,6 +58,7 @@ class CliController {
         print "  -r|--recursive                 Use subdirectories for converting.\n";
         print "  --class-prefix=<prefix>        Set TestCase class prefix.\n";
         print "  --use-hash-postfix             Add hash part to output filename.\n";
+        print "  --files-pattern=<pattern>      Glob pattern for input test files (*.html).\n";
     }
     
     protected function _applyOptionsAndFlags($options, $flags){
@@ -103,6 +104,9 @@ class CliController {
                             break;
                         case 'use-hash-postfix':
                             $this->_useHashFilePostfix = true;
+                            break;
+                        case 'files-pattern':
+                            $this->_htmlPattern = $opt[1];
                             break;
                         default:
                             print "Unknown option \"{$opt[0]}\".\n";
