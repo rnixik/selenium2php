@@ -229,6 +229,7 @@ class Converter {
         $res = str_replace('&nbsp;', ' ', $res);
         $res = html_entity_decode($res);
         $res = str_replace('<br />', '\n', $res);
+        $res = str_replace('"', '\\"', $res);
         return $res;
     }
     
