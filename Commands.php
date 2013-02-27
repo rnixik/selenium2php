@@ -48,8 +48,10 @@ class Commands {
     public function __call($name, $arguments) {
         if (!empty($arguments[1])){
             $line = "{$this->_obj}->$name(\"{$arguments[0]}\", \"{$arguments[1]}\");";
-        } else {
+        } else if (!empty($arguments[0])) {
             $line = "{$this->_obj}->$name(\"{$arguments[0]}\");";
+        } else {
+            $line = "{$this->_obj}->$name();";
         }
         return $line;
     }
@@ -164,5 +166,30 @@ class Commands {
      */
     protected function _assertTrue($expression){
         return "{$this->_obj}->assertTrue($expression);";
+    }
+    
+    /**
+     * 
+     * @param string $target
+     * @return string
+     */
+    public function assertConfirmation($target){
+        $target = str_replace("?", "[\s\S]", $target);
+        $expression = "(bool)preg_match('/^$target$/'," . '$this->getConfirmation()' . ")";
+        return $this->_assertTrue($expression);
+    }
+    
+    /**
+     * 
+     * @return array
+     */
+    public function verifyConfirmation() {
+        $lines = array();
+        $lines[] = 'try {';
+        $lines[] = '    $this->assertEquals("", $this->getConfirmation());';
+        $lines[] = '} catch (PHPUnit_Framework_AssertionFailedError $e) {';
+        $lines[] = '    array_push($this->verificationErrors, $e->toString());';
+        $lines[] = '}';
+        return $lines;
     }
 }
