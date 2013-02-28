@@ -107,14 +107,18 @@ class Converter {
      * @param string $testName test class name (leave blank for auto)
      * @return string PHP test case file content
      */
-    public function convert($htmlStr, $testName = ''){
+    public function convert($htmlStr, $testName = '', $tplFile = ''){
         $this->_testName = $testName;
         $this->_commands = array();
         $this->_parseHtml($htmlStr);
-        $lines = $this->_composeLines();
-        return $this->_composeStr($lines);
+        if ($tplFile && is_file($tplFile)){
+            return $this->_convertToTpl($tplFile);
+        } else {
+            $lines = $this->_composeLines();
+            return $this->_composeStr($lines);
+        }
     }
-    
+        
     /**
      * Implodes lines of file into one string
      * 
@@ -123,6 +127,47 @@ class Converter {
      */
     protected function _composeStr($lines){
         return implode($this->_tplEOL, $lines);
+    }
+    
+    /**
+     * Adds indents to each line except first
+     * and implodes lines into one string
+     * 
+     * @param array $lines array of strings
+     * @param int $indentSize
+     * @return string
+     */
+    protected function _composeStrWithIndents($lines, $indentSize){
+        foreach ($lines as $i=>$line){
+            if ($i != 0){
+                $lines[$i] = $this->_indent($indentSize) . $line;
+            }
+        }
+        return $this->_composeStr($lines);
+    }
+    
+    /**
+     * Uses tpl file for output result.
+     * 
+     * @param string $tplFile filepath
+     * @return string output content
+     */
+    protected function _convertToTpl($tplFile){
+        $tpl = file_get_contents($tplFile);
+        $replacements = array(
+            '{$comment}' => $this->_composeComment(),
+            '{$className}' => $this->_composeClassName(),
+            '{$browser}' => $this->_browser,
+            '{$testUrl}' => $this->_testUrl ? $this->_testUrl : $this->_defaultTestUrl,
+            '{$remoteHost}' => $this->_remoteHost ? $this->_remoteHost : '127.0.0.1',
+            '{$remotePort}' => $this->_remotePort ? $this->_remotePort : '4444',
+            '{$testMethodName}' => $this->_composeTestMethodName(),
+            '{$testMethodContent}' => $this->_composeStrWithIndents($this->_composeTestMethodContent(), 8),
+        );
+        foreach ($replacements as $s=>$r){
+            $tpl = str_replace($s, $r, $tpl);
+        }
+        return $tpl;
     }
     
     protected function _composeLines() {
@@ -195,7 +240,7 @@ class Converter {
             $mLines[] = '$this->setHost("' . $this->_remoteHost . '");';
         }
         if ($this->_remotePort) {
-            $mLines[] = '$this->setHost("' . $this->_remotePort . '");';
+            $mLines[] = '$this->setPort("' . $this->_remotePort . '");';
         }
         return $mLines;
     }

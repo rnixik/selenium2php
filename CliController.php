@@ -30,6 +30,7 @@ class CliController {
     protected $_destFolder = '';
     protected $_sourceBaseDir = '';
     protected $_useHashFilePostfix = false;
+    protected $_tplFile = '';
 
     public function __construct() {
         require_once 'Converter.php';
@@ -59,6 +60,7 @@ class CliController {
         print "  --class-prefix=<prefix>        Set TestCase class prefix.\n";
         print "  --use-hash-postfix             Add hash part to output filename.\n";
         print "  --files-pattern=<pattern>      Glob pattern for input test files (*.html).\n";
+        print "  --output-tpl=<file>            Teplate for result file. See TestExampleTpl.\n";
     }
     
     protected function _applyOptionsAndFlags($options, $flags){
@@ -107,6 +109,9 @@ class CliController {
                             break;
                         case 'files-pattern':
                             $this->_htmlPattern = $opt[1];
+                            break;
+                        case 'output-tpl':
+                            $this->_tplFile = $opt[1];
                             break;
                         default:
                             print "Unknown option \"{$opt[0]}\".\n";
@@ -259,7 +264,7 @@ class CliController {
             if (!$phpFileName) {
                 $phpFileName = $this->_makeOutputFilename($htmlFileName, $htmlContent);
             }
-            $result = $this->_converter->convert($htmlContent, $this->_makeTestName($htmlFileName));
+            $result = $this->_converter->convert($htmlContent, $this->_makeTestName($htmlFileName), $this->_tplFile);
             file_put_contents($phpFileName, $result);
             print $phpFileName."\n";
         }
