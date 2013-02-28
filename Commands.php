@@ -168,6 +168,12 @@ class Commands {
         return "{$this->_obj}->assertTrue($expression);";
     }
     
+    protected function _assertPattern($target, $string){
+        $target = str_replace("?", "[\s\S]", $target);
+        $expression = "(bool)preg_match('/^$target$/', " . $string . ")";
+        return $expression;
+    }
+    
     /**
      * 
      * @param string $target
@@ -175,7 +181,7 @@ class Commands {
      */
     public function assertConfirmation($target){
         $target = str_replace("?", "[\s\S]", $target);
-        $expression = "(bool)preg_match('/^$target$/'," . '$this->getConfirmation()' . ")";
+        $expression = $this->_assertPattern($target, '$this->getConfirmation()');
         return $this->_assertTrue($expression);
     }
     
@@ -183,10 +189,11 @@ class Commands {
      * 
      * @return array
      */
-    public function verifyConfirmation() {
+    public function verifyConfirmation($target) {
+        $expression = $this->_assertTrue($this->_assertPattern($target, '$this->getConfirmation()'));
         $lines = array();
         $lines[] = 'try {';
-        $lines[] = '    $this->assertEquals("", $this->getConfirmation());';
+        $lines[] = '    '.$expression;
         $lines[] = '} catch (PHPUnit_Framework_AssertionFailedError $e) {';
         $lines[] = '    array_push($this->verificationErrors, $e->toString());';
         $lines[] = '}';
