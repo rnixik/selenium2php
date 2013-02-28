@@ -140,7 +140,7 @@ class Commands {
      */
     protected function _waitWrapper($expression){
         $lines = array();
-        $lines[] = 'for ($second = 0;; $second++) {';
+        $lines[] = 'for ($second = 0; ; $second++) {';
         $lines[] = '    if ($second >= 60) '.$this->_obj.'->fail("timeout");'; 
         $lines[] = '    try {';        
         $lines[] = "        if ($expression) break;";  
@@ -198,5 +198,13 @@ class Commands {
         $lines[] = '    array_push($this->verificationErrors, $e->toString());';
         $lines[] = '}';
         return $lines;
+    }
+    
+    public function assertTextPresent($target){
+        return $this->_assertTrue("{$this->_obj}->isTextPresent(\"$target\")");
+    }
+    
+    public function assertTextNotPresent($target){
+        return $this->_assertFalse("{$this->_obj}->isTextPresent(\"$target\")");
     }
 }
