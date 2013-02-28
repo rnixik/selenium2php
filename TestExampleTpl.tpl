@@ -6,7 +6,7 @@ class S2p_{$className} extends PHPUnit_Extensions_SeleniumTestCase{
         $this->setBrowser("{$browser}");
         $this->setBrowserUrl("{$testUrl}");
         $this->setHost("{$remoteHost}");
-        $this->setPort("{$remotePort}");
+        $this->setPort({$remotePort});
     }
 
     function {$testMethodName}(){
