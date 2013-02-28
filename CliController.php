@@ -60,7 +60,7 @@ class CliController {
         print "  --class-prefix=<prefix>        Set TestCase class prefix.\n";
         print "  --use-hash-postfix             Add hash part to output filename.\n";
         print "  --files-pattern=<pattern>      Glob pattern for input test files (*.html).\n";
-        print "  --output-tpl=<file>            Teplate for result file. See TestExampleTpl.\n";
+        print "  --output-tpl=<file>            Template for result file. See TestExampleTpl.\n";
     }
     
     protected function _applyOptionsAndFlags($options, $flags){

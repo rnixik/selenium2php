@@ -20,6 +20,7 @@ PHP code for PHPUnit_Extensions_SeleniumTestCase as TestCase file.
     --class-prefix=<prefix>        Set TestCase class prefix.
     --use-hash-postfix             Add hash part to output filename
     --files-pattern=<pattern>      Glob pattern for input test files (*.html).
+    --output-tpl=<file>            Template for result file. See TestExampleTpl.
 
 ###Example
 You have google.html recorded in Selenium IDE:
