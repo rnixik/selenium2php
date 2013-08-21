@@ -46,9 +46,9 @@ class Commands {
      * @return string
      */
     public function __call($name, $arguments) {
-        if (!empty($arguments[1])){
+        if (false !== $arguments[1]){
             $line = "{$this->_obj}->$name(\"{$arguments[0]}\", \"{$arguments[1]}\");";
-        } else if (!empty($arguments[0])) {
+        } else if (false !== $arguments[0]) {
             $line = "{$this->_obj}->$name(\"{$arguments[0]}\");";
         } else {
             $line = "{$this->_obj}->$name();";
