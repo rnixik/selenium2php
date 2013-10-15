@@ -92,6 +92,19 @@ And you get GoogleTest.php
         }
     }    
 
+
+###PHPUnit built-in method
+If you don't need php test files, see [PHPUnit Example](http://phpunit.de/manual/3.8/en/selenium.html#selenium.seleniumtestcase.examples.WebTest4.php)
+
+    <?php
+    require_once 'PHPUnit/Extensions/SeleniumTestCase.php';
+
+    class SeleneseTests extends PHPUnit_Extensions_SeleniumTestCase
+    {
+        public static $seleneseDirectory = '/path/to/files';
+    }
+    ?>
+
 ###License
     Copyright 2013 Rnix Valentine
     Licensed under the Apache License, Version 2.0 (the "License");
