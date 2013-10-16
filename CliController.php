@@ -50,6 +50,7 @@ class CliController {
         print "\n";
         print "\n";      
         print "  --dest=<path>                  Destination folder.\n";
+        print "  --selenium2                    Use Selenium2 tests formar.\n";
         print "  --php-prefix=<string>          Add prefix to php filenames.\n";
         print "  --php-postfix=<string>         Add postfix to php filenames.\n";
         print "  --browser=<browsers string>    Set browser for tests.\n";
@@ -73,6 +74,9 @@ class CliController {
                             break;
                         case 'use-hash-postfix':
                             $this->_useHashFilePostfix = true;
+                            break;
+                        case 'selenium2':
+                            $this->_converter->useSelenium2();
                             break;
                         default:
                             print "Unknown option \"$opt\".\n";

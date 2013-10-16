@@ -28,9 +28,12 @@ class Converter {
     protected $_defaultTestName = 'some';
     protected $_defaultTestUrl = 'http://example.com';
     
+    protected $_selenium2 = false;
+    
     protected $_commands = array();
     
     protected $_tplEOL = PHP_EOL;
+    protected $_tplCommandEOL = '';
     protected $_tplFirstLine = '<?php';
     
     /**
@@ -246,8 +249,14 @@ class Converter {
     }
     
     protected function _composeTestMethodContent(){
-        require_once 'Commands.php';
-        $commands = new Commands;
+        if ($this->_selenium2){
+            require_once 'Commands2.php';
+            $commands = new Commands2;
+        } else {
+            require_once 'Commands.php';
+            $commands = new Commands;
+        }
+        
         $mLines = array();
         
         
@@ -257,9 +266,19 @@ class Converter {
             $value   = $this->_prepareHtml($row['value']);
             $res = $commands->$command($target, $value);
             if (is_string($res)){
+                if ($this->_tplCommandEOL !== ''){
+                    $res .= $this->_tplCommandEOL;
+                }
                 $mLines[] = $res;
             } else if (is_array($res)){
+                $size = count($res);
+                $i = 0;
                 foreach ($res as $subLine){
+                    $i++;
+                    if ($size === $i && $this->_tplCommandEOL !== ''){
+                        $subLine .= $this->_tplCommandEOL;
+                    }
+                    
                     $mLines[] = $subLine;
                 }
             }
@@ -317,6 +336,10 @@ class Converter {
         $this->_tplPreClass = $linesOfText;
     }
     
+    public function setTplEOL($tplEOL){
+        $this->_tplEOL = $tplEOL;
+    }
+    
     /**
      * Sets lines of text into test class
      * 
@@ -338,5 +361,11 @@ class Converter {
     
     public function setTplClassPrefix($prefix){
         $this->_tplClassPrefix = $prefix;
+    }
+    
+    public function useSelenium2(){
+        $this->_selenium2 = true;
+        $this->setTplParentClass('PHPUnit_Extensions_Selenium2TestCase');
+        $this->_tplCommandEOL = PHP_EOL;
     }
 }
