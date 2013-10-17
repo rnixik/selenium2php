@@ -183,7 +183,7 @@ class Commands2{
 
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
-        $lines[] = "    if (strpos(\$testCase->byCssSelector('body')->text(), '$text') !== false) {";
+        $lines[] = "    if (strpos(\$testCase->byTag('body')->text(), '$text') !== false) {";
         $lines[] = "         return true;";
         $lines[] = '    }';
         $lines[] = '}, 8000);';
