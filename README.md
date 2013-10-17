@@ -4,6 +4,7 @@ Selenium2php
 ###Description
 Converts HTML text of Selenium test case recorded from Selenium IDE into
 PHP code for PHPUnit_Extensions_SeleniumTestCase or PHPUnit_Extensions_Selenium2TestCase as TestCase file.
+Check [Commands2.php](https://github.com/rnixik/selenium2php/blob/master/Commands2.php) for Selenium2 and [Commands.php](https://github.com/rnixik/selenium2php/blob/master/Commands1.php) for Selenium RC implemented commands.
 
 Basic workflow:
 
