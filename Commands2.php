@@ -191,6 +191,7 @@ class Commands2{
     }
 
     /**
+     * SELENIUM DEPRECATED
      * 
      * @param string $target
      * @return array
@@ -250,12 +251,37 @@ class Commands2{
         return "(bool)(strpos({$this->_obj}->byTag('body')->text(), '$text') !== false)";
     }
 
+    /**
+     * SELENIUM DEPRECATED
+     * 
+     * @param type $target
+     * @return type
+     */
     public function assertTextPresent($target) {
         return $this->_assertTrue($this->_isTextPresent($target));
     }
 
+    /**
+     * SELENIUM DEPRECATED
+     * 
+     * @param type $target
+     * @return type
+     */
     public function assertTextNotPresent($target) {
         return $this->_assertFalse($this->_isTextPresent($target));
+    }
+    
+    
+    public function waitForText($target, $value){
+        $localExpression = '$input = ' . str_replace($this->_obj, '$testCase', $this->_byQuery($target));
+        $lines = array();
+        $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
+        $lines[] = "    $localExpression";
+        $lines[] = "    if (strpos(\$input->text(), '$value') !== false) {";
+        $lines[] = "         return true;";
+        $lines[] = '    }';
+        $lines[] = '}, 8000);';
+        return $lines;
     }
 
 }
