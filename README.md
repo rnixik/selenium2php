@@ -4,6 +4,7 @@ Selenium2php
 ###Description
 Converts HTML text of Selenium test case recorded from Selenium IDE into
 PHP code for PHPUnit_Extensions_SeleniumTestCase or PHPUnit_Extensions_Selenium2TestCase as TestCase file.
+
 Basic workflow:
 
 1. Record HTML tests with [Selenum IDE](http://docs.seleniumhq.org/projects/ide/)
@@ -39,7 +40,7 @@ If you are going to use Selenium 2, you should know:
 Use waitFor*, for example, waitForElementPresent after click command.
 * You can nott manipulate invisible elements.
 
-###Selenium2 (PhantomJS, GhostDriver) Example
+###Selenium2 (PhantomJS, GhostDriver) example
 You have google.html recorded in Selenium IDE:
 
     <?xml version="1.0" encoding="UTF-8"?>
@@ -140,13 +141,14 @@ And you get GoogleTest.php
 
 Your test case is ready.
 Prepare your selenim hub + phantomjs webdriver like [here](https://github.com/detro/ghostdriver#register-ghostdriver-with-a-selenium-grid-hub):
+
     java -jar selenium.jar -role hub
     phantomjs --webdriver=1408 --webdriver-selenium-grid-hub=http://127.0.0.1:4444
 
 And run phpunit:
     php phpunit.phar GoogleTest.php
 
-###Selenium1 (RC) Example
+###Selenium1 (RC) example
 You have google.html recorded in Selenium IDE:
 
     <?xml version="1.0" encoding="UTF-8"?>
