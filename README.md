@@ -235,7 +235,8 @@ If you don't need php test files, see [PHPUnit Example](http://phpunit.de/manual
 
 ###TestCase templates
 You can add you php code to every TestCase file. For example, save screenshot on not successful test.
-File Selenium2TestCaseScreenshotTpl.tpl
+
+File Selenium2TestCaseScreenshotTpl.tpl:
 
     <?php
     {$comment}
@@ -259,7 +260,7 @@ File Selenium2TestCaseScreenshotTpl.tpl
 
     }
 
-Run with option --output-tpl
+Run converting with option --output-tpl
 
     php selenium2php.php --selenium2 --browser=phantomjs --output-tpl=Selenium2TestCaseScreenshotTpl.tpl google.html
 
