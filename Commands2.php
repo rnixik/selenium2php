@@ -301,5 +301,14 @@ class Commands2{
         $lines[] = '}, 8000);';
         return $lines;
     }
+    
+    public function assertConfirmation($text){
+        $lines = array();
+        $lines[] = "if ( !is_null({$this->_obj}->alertText()) ) {";
+        $lines[] = "    {$this->_obj}->assertEquals('$text', {$this->_obj}->alertText());";
+        $lines[] = "}";
+        $lines[] = "{$this->_obj}->acceptAlert();";
+        return $lines;
+    }
 
 }
