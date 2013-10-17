@@ -231,7 +231,7 @@ class Commands2{
     }
     
     protected function _isTextPresent($text) {
-        return "(bool)(strpos({$this->_obj}->byCssSelector('body')->text(), '$text') !== false)";
+        return "(bool)(strpos({$this->_obj}->byTag('body')->text(), '$text') !== false)";
     }
 
     public function assertTextPresent($target) {
