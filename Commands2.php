@@ -173,6 +173,21 @@ class Commands2{
         $lines[] = '}, 8000);';
         return $lines;
     }
+    
+    public function waitForElementNotPresent($target) {
+        $localExpression = str_replace($this->_obj, '$testCase', $this->_byQuery($target));
+        $lines = array();
+        $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
+        $lines[] = "    try {";
+        $lines[] = "        $localExpression";
+        $lines[] = '    } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
+        $lines[] = "        if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement == \$e->getCode()) {";
+        $lines[] = "            return true;";
+        $lines[] = "        }";
+        $lines[] = '    }';
+        $lines[] = '}, 8000);';
+        return $lines;
+    }
 
     /**
      * 
