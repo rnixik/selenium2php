@@ -51,6 +51,7 @@ class Commands2{
     public function type($selector, $value) {
         $lines = array();
         $lines[] = '$input = ' . $this->_byQuery($selector);
+        $lines[] = '$input->clear();';
         $lines[] = '$input->value("' . $value . '");';
         return $lines;
     }
