@@ -50,7 +50,7 @@ class CliController {
         print "\n";
         print "\n";      
         print "  --dest=<path>                  Destination folder.\n";
-        print "  --selenium2                    Use Selenium2 tests formar.\n";
+        print "  --selenium2                    Use Selenium2 tests format.\n";
         print "  --php-prefix=<string>          Add prefix to php filenames.\n";
         print "  --php-postfix=<string>         Add postfix to php filenames.\n";
         print "  --browser=<browsers string>    Set browser for tests.\n";
