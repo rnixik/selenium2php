@@ -146,6 +146,7 @@ Prepare your selenim hub + phantomjs webdriver like [here](https://github.com/de
     phantomjs --webdriver=1408 --webdriver-selenium-grid-hub=http://127.0.0.1:4444
 
 And run phpunit:
+
     php phpunit.phar GoogleTest.php
 
 ###Selenium1 (RC) example
