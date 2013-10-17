@@ -32,7 +32,7 @@ It is easier if you use continuous integration, for example, [Jenkins](http://je
     --class-prefix=<prefix>        Set TestCase class prefix.
     --use-hash-postfix             Add hash part to output filename
     --files-pattern=<pattern>      Glob pattern for input test files (*.html).
-    --output-tpl=<file>            Template for result file. See TestExampleTpl.
+    --output-tpl=<file>            Template for result file. See Selenium2TestCaseTpl.
 
 ###Selenium2 features
 If you are going to use Selenium 2, you should know:
@@ -232,6 +232,36 @@ If you don't need php test files, see [PHPUnit Example](http://phpunit.de/manual
         public static $seleneseDirectory = '/path/to/files';
     }
     ?>
+
+###TestCase templates
+You can add you php code to every TestCase file. For example, save screenshot on not successful test.
+File Selenium2TestCaseScreenshotTpl.tpl
+
+    <?php
+    {$comment}
+    class S2p_{$className} extends PHPUnit_Extensions_Selenium2TestCase{
+
+        function setUp(){
+            $this->setBrowser("{$browser}");
+            $this->setBrowserUrl("{$testUrl}");
+            $this->setHost("{$remoteHost}");
+            $this->setPort({$remotePort});
+        }
+
+        function {$testMethodName}(){
+            {$testMethodContent}
+        }
+
+        public function onNotSuccessfulTest(Exception $e){
+            file_put_contents("D:/t/test_screenshots/{$className}.png", $this->currentScreenshot());
+            throw $e;
+        }
+
+    }
+
+Run with option --output-tpl
+
+    php selenium2php.php --selenium2 --browser=phantomjs --output-tpl=Selenium2TestCaseScreenshotTpl.tpl google.html
 
 ###License
     Copyright 2013 Roman Nix
