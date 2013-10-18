@@ -36,12 +36,20 @@ class Commands2{
     public function __call($name, $arguments) {
         if (isset($arguments[1]) && false !== $arguments[1]){
             $line = "//{$this->_obj}->$name(\"{$arguments[0]}\", \"{$arguments[1]}\");";
+            $this->_addNote('Unknown command', $name, $arguments);
         } else if (false !== $arguments[0]) {
             $line = "{$this->_obj}->$name(\"{$arguments[0]}\");";
         } else {
             $line = "{$this->_obj}->$name();";
         }
         return $line;
+    }
+    
+    protected function _addNote($noteText, $commandName, $arguments = array()){
+        if (is_string($arguments)){
+            $arguments = array($arguments);
+        }
+        echo "$noteText - $commandName('" . implode("', '", $arguments). "')\n";
     }
 
     public function open($target) {
@@ -197,7 +205,7 @@ class Commands2{
      * @return array
      */
     public function waitForTextPresent($text) {
-
+        $this->_addNote('Deprecated command', 'waitForTextPresent', $text);
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    if (strpos(\$testCase->byTag('body')->text(), '$text') !== false) {";
@@ -258,6 +266,7 @@ class Commands2{
      * @return type
      */
     public function assertTextPresent($target) {
+        $this->_addNote('Deprecated command', 'assertTextPresent', $target);
         return $this->_assertTrue($this->_isTextPresent($target));
     }
 
@@ -268,6 +277,7 @@ class Commands2{
      * @return type
      */
     public function assertTextNotPresent($target) {
+        $this->_addNote('Deprecated command', 'assertTextNotPresent', $target);
         return $this->_assertFalse($this->_isTextPresent($target));
     }
     
