@@ -277,7 +277,7 @@ class Commands2{
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    $localExpression";
-        $lines[] = "    if (strpos(\$input->text(), '$value') !== false) {";
+        $lines[] = "    if (('$value' === '' && \$input->text() === '') || strpos(\$input->text(), '$value') !== false) {";
         $lines[] = "         return true;";
         $lines[] = '    }';
         $lines[] = '}, 8000);';
@@ -290,7 +290,7 @@ class Commands2{
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    try {";
         $lines[] = "        $localExpression";
-        $lines[] = "        if (strpos(\$input->text(), '$value') === false) {";
+        $lines[] = "        if (('$value' === '' && \$input->text() !== '') || strpos(\$input->text(), '$value') === false) {";
         $lines[] = "            return true;";
         $lines[] = '        }';
         $lines[] = '    } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
