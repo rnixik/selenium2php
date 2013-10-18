@@ -22,6 +22,8 @@ namespace Selenium2php;
  * Provides formatting some special commands into
  * PHPUnit_Extensions_Selenium2TestCase analogues.
  * 
+ * Tested with PHPUnit 3.7.27.
+ * 
  */
 class Commands2{
     
@@ -60,6 +62,23 @@ class Commands2{
         $lines = array();
         $lines[] = '$input = ' . $this->_byQuery($selector);
         $lines[] = '$input->clear();';
+        $lines[] = '$input->value("' . $value . '");';
+        return $lines;
+    }
+    
+    /**
+     * Sends key by key
+     * 
+     * In PHPUnit 3.7.27 $this->keys() is not implemented,
+     * but $this->value() does it key by key.
+     * 
+     * @param type $selector
+     * @param type $value
+     * @return string
+     */
+    public function sendKeys($selector, $value){
+        $lines = array();
+        $lines[] = '$input = ' . $this->_byQuery($selector);
         $lines[] = '$input->value("' . $value . '");';
         return $lines;
     }
@@ -133,7 +152,7 @@ class Commands2{
     public function assertText($target, $value) {
         $lines = array();
         $lines[] = '$input = ' . $this->_byQuery($target);
-        $lines[] = "{$this->_obj}->assertEquals('$value', \$input->text());";
+        $lines[] = "{$this->_obj}->assertEquals(\"$value\", \$input->text());";
         return $lines;
     }
 
@@ -208,7 +227,7 @@ class Commands2{
         $this->_addNote('Deprecated command', 'waitForTextPresent', $text);
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
-        $lines[] = "    if (strpos(\$testCase->byTag('body')->text(), '$text') !== false) {";
+        $lines[] = "    if (strpos(\$testCase->byTag('body')->text(), \"$text\") !== false) {";
         $lines[] = "         return true;";
         $lines[] = '    }';
         $lines[] = '}, 8000);';
@@ -256,7 +275,7 @@ class Commands2{
     }
     
     protected function _isTextPresent($text) {
-        return "(bool)(strpos({$this->_obj}->byTag('body')->text(), '$text') !== false)";
+        return "(bool)(strpos({$this->_obj}->byTag('body')->text(), \"$text\") !== false)";
     }
 
     /**
@@ -287,7 +306,7 @@ class Commands2{
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    $localExpression";
-        $lines[] = "    if (('$value' === '' && \$input->text() === '') || strpos(\$input->text(), '$value') !== false) {";
+        $lines[] = "    if (('$value' === '' && \$input->text() === '') || strpos(\$input->text(), \"$value\") !== false) {";
         $lines[] = "         return true;";
         $lines[] = '    }';
         $lines[] = '}, 8000);';
@@ -300,7 +319,7 @@ class Commands2{
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    try {";
         $lines[] = "        $localExpression";
-        $lines[] = "        if (('$value' === '' && \$input->text() !== '') || strpos(\$input->text(), '$value') === false) {";
+        $lines[] = "        if (('$value' === '' && \$input->text() !== '') || strpos(\$input->text(), \"$value\") === false) {";
         $lines[] = "            return true;";
         $lines[] = '        }';
         $lines[] = '    } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
@@ -315,7 +334,7 @@ class Commands2{
     public function assertConfirmation($text){
         $lines = array();
         $lines[] = "if ( !is_null({$this->_obj}->alertText()) ) {";
-        $lines[] = "    {$this->_obj}->assertEquals('$text', {$this->_obj}->alertText());";
+        $lines[] = "    {$this->_obj}->assertEquals(\"$text\", {$this->_obj}->alertText());";
         $lines[] = "}";
         $lines[] = "{$this->_obj}->acceptAlert();";
         return $lines;
