@@ -332,11 +332,31 @@ class Commands2{
     }
     
     public function assertConfirmation($text){
+        return $this->assertAlert($text);
+    }
+    
+    public function assertAlert($text){
         $lines = array();
         $lines[] = "if ( !is_null({$this->_obj}->alertText()) ) {";
         $lines[] = "    {$this->_obj}->assertEquals(\"$text\", {$this->_obj}->alertText());";
         $lines[] = "}";
         $lines[] = "{$this->_obj}->acceptAlert();";
+        return $lines;
+    }
+    
+    public function assertNotText($target, $value){
+        $expression = '$input = ' . $this->_byQuery($target);
+        $lines = array();
+        $lines[] = "try {";
+        $lines[] = "    $expression";
+        $lines[] = "    if (('$value' === '' && \$input->text() !== '') || strpos(\$input->text(), \"$value\") === false) {";
+        $lines[] = "        return true;";
+        $lines[] = '    }';
+        $lines[] = '} catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
+        $lines[] = "    if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement == \$e->getCode()) {";
+        $lines[] = "        return true;";
+        $lines[] = "    }";
+        $lines[] = '}';
         return $lines;
     }
 
