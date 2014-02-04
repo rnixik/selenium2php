@@ -28,7 +28,9 @@ namespace Selenium2php;
 class Commands2{
     
     protected $_obj = '$this';
-    
+    protected $_storedVaiables = array();
+
+
     /**
      * 
      * @param string $name
@@ -53,9 +55,13 @@ class Commands2{
         }
         echo "$noteText - $commandName('" . implode("', '", $arguments). "')\n";
     }
+    
+    protected function _storeVariable($varName, $varValue) {
+        $this->_storedVaiables[$varName] = $varValue;
+    }
 
     public function open($target) {
-        return "{$this->_obj}->url('$target');";
+        return "{$this->_obj}->url(\"$target\");";
     }
 
     public function type($selector, $value) {
@@ -192,11 +198,18 @@ class Commands2{
      */
     public function waitForElementPresent($target) {
         $localExpression = str_replace($this->_obj, '$testCase', $this->_byQuery($target));
+        
+        /*
+         * In Selenium 2 we can not interact with invisible elements.
+         */
+        
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = '    try {';
-        $lines[] = "        $localExpression";
-        $lines[] = "        return true;";
+        $lines[] = "        \$element = $localExpression";
+        $lines[] = "        if (\$element->displayed()) {";
+        $lines[] = "            return true;";
+        $lines[] = "        }";
         $lines[] = '    } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {}';
         $lines[] = '}, 8000);';
         return $lines;
@@ -359,5 +372,31 @@ class Commands2{
         $lines[] = '}';
         return $lines;
     }
-
+    
+    public function runScript($script) {
+        $lines = array();
+        $lines[] = "\$script = \"$script\";";
+        $lines[] = "\$result = {$this->_obj}->execute(array(";
+        $lines[] = "    'script' => \$script,";
+        $lines[] = "    'args' => array()";
+        $lines[] = "));";
+        return $lines;
+    }
+    
+    public function storeAttribute($target, $varName) {
+        /*
+         * We dont have a $this->getAttribute($locator)
+         */
+        /*
+         * /(.+)\/@([\S])+$/ ~ //div/a/@href -> //div/a
+         */
+        $elementTarget = preg_replace('/(.+)\/@([\S]+)$/', '$1', $target);
+        $attribute = preg_replace('/(.+)\/@([\S]+)$/', '$2', $target);
+        $lines = array();
+        $lines[] = '//replacement for: ' . $target;
+        $lines[] = '$element = ' . $this->_byQuery($elementTarget);
+        $lines[] = "\$$varName = \$element->attribute('$attribute');";
+        return $lines;
+    }
+    
 }
