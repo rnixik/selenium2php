@@ -28,8 +28,6 @@ namespace Selenium2php;
 class Commands2{
     
     protected $_obj = '$this';
-    protected $_storedVaiables = array();
-
 
     /**
      * 
@@ -54,10 +52,6 @@ class Commands2{
             $arguments = array($arguments);
         }
         echo "$noteText - $commandName('" . implode("', '", $arguments). "')\n";
-    }
-    
-    protected function _storeVariable($varName, $varValue) {
-        $this->_storedVaiables[$varName] = $varValue;
     }
 
     public function open($target) {
