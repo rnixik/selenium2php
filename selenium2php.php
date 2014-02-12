@@ -15,6 +15,11 @@
  * limitations under the License.
  */
 
+set_include_path(implode(PATH_SEPARATOR, array(
+            realpath(dirname(__FILE__)),
+            get_include_path(),
+        )));
+
 require 'libs/arguments.php';
 require 'CliController.php';
 
