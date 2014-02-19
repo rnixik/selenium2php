@@ -62,6 +62,8 @@ class CliController {
         print "  --use-hash-postfix             Add hash part to output filename.\n";
         print "  --files-pattern=<pattern>      Glob pattern for input test files (*.html).\n";
         print "  --output-tpl=<file>            Template for result file. See TestExampleTpl.\n";
+        print "  --custom-param1=<value>        Assign value to \$customParam1 in template.\n";
+        print "  --custom-param2=<value>        Assign value to \$customParam2 in template.\n";
     }
     
     protected function _applyOptionsAndFlags($options, $flags){
@@ -116,6 +118,12 @@ class CliController {
                             break;
                         case 'output-tpl':
                             $this->_tplFile = $opt[1];
+                            break;
+                        case 'custom-param1':
+                            $this->_converter->setTplCustomParam1($opt[1]);
+                            break;
+                        case 'custom-param2':
+                            $this->_converter->setTplCustomParam2($opt[1]);
                             break;
                         default:
                             print "Unknown option \"{$opt[0]}\".\n";

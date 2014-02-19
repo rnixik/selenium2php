@@ -33,6 +33,8 @@ It is easier if you use continuous integration, for example, [Jenkins](http://je
     --use-hash-postfix             Add hash part to output filename
     --files-pattern=<pattern>      Glob pattern for input test files (*.html).
     --output-tpl=<file>            Template for result file. See Selenium2TestCaseTpl.
+    --custom-param1=<value>        Assign value to $customParam1 in template.
+    --custom-param2=<value>        Assign value to $customParam2 in template.
 
 ###Selenium2 features
 If you are going to use Selenium 2, you should know:

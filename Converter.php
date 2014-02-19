@@ -63,6 +63,18 @@ class Converter {
      * @var type 
      */
     protected $_remotePort = '';
+    
+    /**
+     *
+     * @var string 
+     */
+    protected $_tplCustomParam1 = '';
+    
+    /**
+     *
+     * @var string
+     */
+    protected $_tplCustomParam2 = '';
 
     /**
      * Parses HTML string into array of commands, 
@@ -114,8 +126,13 @@ class Converter {
         $this->_testName = $testName;
         $this->_commands = array();
         $this->_parseHtml($htmlStr);
-        if ($tplFile && is_file($tplFile)){
-            return $this->_convertToTpl($tplFile);
+        if ($tplFile){
+            if (is_file($tplFile)){
+                return $this->_convertToTpl($tplFile);
+            } else {
+                echo "Template file $tplFile is not accessible.";
+                exit;
+            }
         } else {
             $lines = $this->_composeLines();
             return $this->_composeStr($lines);
@@ -166,6 +183,8 @@ class Converter {
             '{$remotePort}' => $this->_remotePort ? $this->_remotePort : '4444',
             '{$testMethodName}' => $this->_composeTestMethodName(),
             '{$testMethodContent}' => $this->_composeStrWithIndents($this->_composeTestMethodContent(), 8),
+            '{$customParam1}' => $this->_tplCustomParam1,
+            '{$customParam2}' => $this->_tplCustomParam2,
         );
         foreach ($replacements as $s=>$r){
             $tpl = str_replace($s, $r, $tpl);
@@ -367,5 +386,23 @@ class Converter {
         $this->_selenium2 = true;
         $this->setTplParentClass('PHPUnit_Extensions_Selenium2TestCase');
         $this->_tplCommandEOL = PHP_EOL;
+    }
+    
+    /**
+     * Passes value to template file
+     * 
+     * @param type $value
+     */
+    public function setTplCustomParam1($value){
+        $this->_tplCustomParam1 = $value;
+    }
+    
+    /**
+     * Passes value to template file
+     * 
+     * @param type $value
+     */
+    public function setTplCustomParam2($value){
+        $this->_tplCustomParam2 = $value;
     }
 }
