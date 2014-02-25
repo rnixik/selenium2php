@@ -142,7 +142,7 @@ class Commands2{
     public function clickAndWait($target) {
         return $this->click($target);
     }
-
+    
     /**
      * 
      * @param string $target
@@ -152,7 +152,34 @@ class Commands2{
     public function assertText($target, $value) {
         $lines = array();
         $lines[] = '$input = ' . $this->_byQuery($target);
-        $lines[] = "{$this->_obj}->assertEquals(\"$value\", \$input->text());";
+        
+        if (strpos($value, '*')) {
+            $value = '/' . str_replace('*', '.+', $value) . '/';
+            $lines[] = "{$this->_obj}->assertRegExp(\"$value\", \$input->text());";
+        } else {
+            $lines[] = "{$this->_obj}->assertEquals(\"$value\", \$input->text());";
+        }
+        
+        return $lines;
+    }
+    
+    /**
+     * 
+     * @param string $target
+     * @param string $value
+     * @return string
+     */
+    public function assertNotText($target, $value) {
+        $lines = array();
+        $lines[] = '$input = ' . $this->_byQuery($target);
+        
+        if (strpos($value, '*')) {
+            $value = '/' . str_replace('*', '.+', $value) . '/';
+            $lines[] = "{$this->_obj}->assertNotRegExp(\"$value\", \$input->text());";
+        } else {
+            $lines[] = "{$this->_obj}->assertNotEquals(\"$value\", \$input->text());";
+        }
+        
         return $lines;
     }
 
