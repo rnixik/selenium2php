@@ -400,4 +400,16 @@ class Commands2{
         return $lines;
     }
     
+    /**
+     * 
+     * @param type $target
+     * @return type
+     */
+    public function mouseOver($target) {
+        $lines = array();
+        $lines[] = '$element = ' . $this->_byQuery($target);
+        $lines[] = "{$this->_obj}->moveto(\$element);";
+        return $lines;
+    }
+    
 }
