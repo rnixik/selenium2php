@@ -396,6 +396,7 @@ class Commands2{
     }
     
     public function storeAttribute($target, $varName) {
+        $this->_checkVarName($varName);
         /*
          * We dont have a $this->getAttribute($locator)
          */
@@ -408,6 +409,27 @@ class Commands2{
         $lines[] = '//replacement for: ' . $target;
         $lines[] = '$element = ' . $this->_byQuery($elementTarget);
         $lines[] = "\$$varName = \$element->attribute('$attribute');";
+        return $lines;
+    }
+    
+    protected function _checkVarName($varName) {
+        $reservedWords = array(
+            'element',
+            'input',
+            'script',
+            'result',
+            'selectElement',
+        );
+        if (in_array($varName, $reservedWords)) {
+            $this->_addNote("'$varName' is bad name for variable, converter uses it for other commands", 'store*', $varName);
+        }
+    }
+    
+    public function storeText($target, $varName) {
+        $this->_checkVarName($varName);
+        $lines = array();
+        $lines[] = '$element = ' . $this->_byQuery($target);
+        $lines[] = "\$$varName = \$element->text();";
         return $lines;
     }
     
