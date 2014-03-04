@@ -195,7 +195,7 @@ class Commands2{
         $lines[] = "    {$this->_obj}->assertTrue(true);";
         $lines[] = '} catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
         $lines[] = "    if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement === \$e->getCode()) {";
-        $lines[] = "        {$this->_obj}->assertTrue(false);";
+        $lines[] = "        {$this->_obj}->assertTrue(false, \"Element $target not found\");";
         $lines[] = "    } else { ";
         $lines[] = "        throw \$e;";
         $lines[] = "    }";
@@ -212,7 +212,7 @@ class Commands2{
         $lines = array();
         $lines[] = 'try {';
         $lines[] = "    " . $this->_byQuery($target);
-        $lines[] = "    {$this->_obj}->assertTrue(false);";
+        $lines[] = "    {$this->_obj}->assertTrue(false, \"Element $target was found\");";
         $lines[] = '} catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
         $lines[] = "    {$this->_obj}->assertEquals(PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement, \$e->getCode());";
         $lines[] = '}';
