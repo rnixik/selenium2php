@@ -40,9 +40,9 @@ class Commands2{
             $line = "//{$this->_obj}->$name(\"{$arguments[0]}\", \"{$arguments[1]}\");";
             $this->_addNote('Unknown command', $name, $arguments);
         } else if (false !== $arguments[0]) {
-            $line = "{$this->_obj}->$name(\"{$arguments[0]}\");";
+            $line = "{$this->_obj}->$name(\"{$arguments[0]}\")";
         } else {
-            $line = "{$this->_obj}->$name();";
+            $line = "{$this->_obj}->$name()";
         }
         return $line;
     }
@@ -60,7 +60,7 @@ class Commands2{
 
     public function type($selector, $value) {
         $lines = array();
-        $lines[] = '$input = ' . $this->_byQuery($selector);
+        $lines[] = '$input = ' . $this->_byQuery($selector) . ';';
         $lines[] = '$input->clear();';
         $lines[] = '$input->value("' . $value . '");';
         return $lines;
@@ -78,7 +78,7 @@ class Commands2{
      */
     public function sendKeys($selector, $value){
         $lines = array();
-        $lines[] = '$input = ' . $this->_byQuery($selector);
+        $lines[] = '$input = ' . $this->_byQuery($selector) . ';';
         $lines[] = '$input->value("' . $value . '");';
         return $lines;
     }
@@ -113,14 +113,14 @@ class Commands2{
 
     public function click($selector) {
         $lines = array();
-        $lines[] = '$input = ' . $this->_byQuery($selector);
+        $lines[] = '$input = ' . $this->_byQuery($selector) . ';';
         $lines[] = '$input->click();';
         return $lines;
     }
 
     public function select($selectSelector, $optionSelector) {
         $lines = array();
-        $lines[] = '$element = ' . $this->_byQuery($selectSelector);
+        $lines[] = '$element = ' . $this->_byQuery($selectSelector) . ';';
         $lines[] = '$selectElement = ' . $this->_obj . '->select($element);';
 
         if (preg_match('/label=(.+)/', $optionSelector, $match)) {
@@ -151,7 +151,7 @@ class Commands2{
      */
     public function assertText($target, $value) {
         $lines = array();
-        $lines[] = '$input = ' . $this->_byQuery($target);
+        $lines[] = '$input = ' . $this->_byQuery($target) . ';';
         
         if (strpos($value, '*')) {
             $value = '/' . str_replace('*', '.+', $value) . '/';
@@ -171,7 +171,7 @@ class Commands2{
      */
     public function assertNotText($target, $value) {
         $lines = array();
-        $lines[] = '$input = ' . $this->_byQuery($target);
+        $lines[] = '$input = ' . $this->_byQuery($target) . ';';
         
         if (strpos($value, '*')) {
             $value = '/' . str_replace('*', '.+', $value) . '/';
@@ -191,7 +191,7 @@ class Commands2{
     public function assertElementPresent($target) {
         $lines = array();
         $lines[] = 'try {';
-        $lines[] = "    " . $this->_byQuery($target);
+        $lines[] = "    " . $this->_byQuery($target) . ';';
         $lines[] = "    {$this->_obj}->assertTrue(true);";
         $lines[] = '} catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
         $lines[] = "    if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement === \$e->getCode()) {";
@@ -211,7 +211,7 @@ class Commands2{
     public function assertElementNotPresent($target) {
         $lines = array();
         $lines[] = 'try {';
-        $lines[] = "    " . $this->_byQuery($target);
+        $lines[] = "    " . $this->_byQuery($target) . ';';
         $lines[] = "    {$this->_obj}->assertTrue(false, \"Element $target was found\");";
         $lines[] = '} catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
         $lines[] = "    {$this->_obj}->assertEquals(PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement, \$e->getCode());";
@@ -234,7 +234,7 @@ class Commands2{
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = '    try {';
-        $lines[] = "        \$element = $localExpression";
+        $lines[] = "        \$element = $localExpression;";
         $lines[] = "        if (\$element->displayed()) {";
         $lines[] = "            return true;";
         $lines[] = "        }";
@@ -248,7 +248,7 @@ class Commands2{
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    try {";
-        $lines[] = "        $localExpression";
+        $lines[] = "        $localExpression;";
         $lines[] = '    } catch (PHPUnit_Extensions_Selenium2TestCase_WebDriverException $e) {';
         $lines[] = "        if (PHPUnit_Extensions_Selenium2TestCase_WebDriverException::NoSuchElement == \$e->getCode()) {";
         $lines[] = "            return true;";
@@ -346,7 +346,7 @@ class Commands2{
         $localExpression = '$input = ' . str_replace($this->_obj, '$testCase', $this->_byQuery($target));
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
-        $lines[] = "    $localExpression";
+        $lines[] = "    $localExpression;";
         $lines[] = "    if (('$value' === '' && \$input->text() === '') || strpos(\$input->text(), \"$value\") !== false) {";
         $lines[] = "         return true;";
         $lines[] = '    }';
@@ -359,7 +359,7 @@ class Commands2{
         $lines = array();
         $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
         $lines[] = "    try {";
-        $lines[] = "        $localExpression";
+        $lines[] = "        $localExpression;";
         $lines[] = "        if (('$value' === '' && \$input->text() !== '') || strpos(\$input->text(), \"$value\") === false) {";
         $lines[] = "            return true;";
         $lines[] = '        }';
@@ -395,23 +395,48 @@ class Commands2{
         return $lines;
     }
     
+    /**
+     * 
+     * @param string $target
+     * @param string $varName
+     * @return string
+     */
     public function storeAttribute($target, $varName) {
         $this->_checkVarName($varName);
+        $line = "\$$varName = " . $this->_getAttributeByLocator($target) . ';';
+        return $line;
+    }
+    
+    /**
+     * 
+     * @param string $target
+     * @param string $value
+     * @return string
+     */
+    public function assertAttribute($target, $value) {
+        $line = "{$this->_obj}->assertEquals(\"$value\", " . $this->_getAttributeByLocator($target) . ');';
+        return $line;
+    }
+    
+    /**
+     * Returns value of dom attribute
+     * 
+     * @param string $locator - locator ending with @attr. For example css=.some-link@href
+     * @return string expression
+     */
+    protected function _getAttributeByLocator($locator) {
         /*
          * We dont have a $this->getAttribute($locator)
          */
         /*
          * /(.+)\/@([\S])+$/ ~ //div/a/@href -> //div/a
          */
-        $elementTarget = preg_replace('/(.+?)\/?@([\S]+)$/', '$1', $target);
-        $attribute = preg_replace('/(.+?)\/?@([\S]+)$/', '$2', $target);
-        $lines = array();
-        $lines[] = '//replacement for: ' . $target;
-        $lines[] = '$element = ' . $this->_byQuery($elementTarget);
-        $lines[] = "\$$varName = \$element->attribute('$attribute');";
-        return $lines;
+        $elementTarget = preg_replace('/(.+?)\/?@([\S]+)$/', '$1', $locator);
+        $attribute = preg_replace('/(.+?)\/?@([\S]+)$/', '$2', $locator);
+        $line = $this->_byQuery($elementTarget) . "->attribute('$attribute')";
+        return $line;
     }
-    
+
     protected function _checkVarName($varName) {
         $reservedWords = array(
             'element',
@@ -428,7 +453,7 @@ class Commands2{
     public function storeText($target, $varName) {
         $this->_checkVarName($varName);
         $lines = array();
-        $lines[] = '$element = ' . $this->_byQuery($target);
+        $lines[] = '$element = ' . $this->_byQuery($target) . ';';
         $lines[] = "\$$varName = \$element->text();";
         return $lines;
     }
@@ -440,7 +465,7 @@ class Commands2{
      */
     public function mouseOver($target) {
         $lines = array();
-        $lines[] = '$element = ' . $this->_byQuery($target);
+        $lines[] = '$element = ' . $this->_byQuery($target) . ';';
         $lines[] = "{$this->_obj}->moveto(\$element);";
         return $lines;
     }
