@@ -470,4 +470,21 @@ class Commands2{
         return $lines;
     }
     
+    /**
+     * Waits for any response
+     * 
+     * @param int $timeout ms
+     * @return type
+     */
+    public function waitForPageToLoad($timeout) {
+        $timeout = intval($timeout);
+        $lines = array();
+        $lines[] = $this->_obj . '->waitUntil(function($testCase) {';
+        $lines[] = '    if (strlen($testCase->source()) > 0) {';
+        $lines[] = '        return true;';
+        $lines[] = '    }';
+        $lines[] = " }, $timeout);";
+        return $lines;
+    }
+    
 }
