@@ -1,7 +1,7 @@
 Selenium2php
 ==========================
 
-###Description
+### Description
 Converts HTML text of Selenium test case recorded from Selenium IDE into
 PHP code for PHPUnit_Extensions_SeleniumTestCase or PHPUnit_Extensions_Selenium2TestCase as TestCase file.
 Check [Commands2.php](https://github.com/rnixik/selenium2php/blob/master/Commands2.php) for Selenium2 and [Commands.php](https://github.com/rnixik/selenium2php/blob/master/Commands1.php) for Selenium RC implemented commands.
@@ -16,7 +16,7 @@ Basic workflow:
 
 It is easier if you use continuous integration, for example, [Jenkins](http://jenkins-ci.org/).
 
-###Usage
+### Usage
     selenium2php [switches] Test.html [Test.php]
     selenium2php [switches] <directory>
     
@@ -36,14 +36,14 @@ It is easier if you use continuous integration, for example, [Jenkins](http://je
     --custom-param1=<value>        Assign value to $customParam1 in template.
     --custom-param2=<value>        Assign value to $customParam2 in template.
 
-###Selenium2 features
+### Selenium2 features
 If you are going to use Selenium 2, you should know:
 * You do not wait for simple page loading (links, form submits).
 * You have to wait for some elements if you use ajax calls or changing visiblity via javascripts. 
 Use waitFor*, for example, waitForElementPresent after click command.
 * You can nott manipulate invisible elements.
 
-###Selenium2 (PhantomJS, GhostDriver) example
+### Selenium2 (PhantomJS, GhostDriver) example
 You have google.html recorded in Selenium IDE:
 
     <?xml version="1.0" encoding="UTF-8"?>
@@ -152,7 +152,7 @@ And run phpunit:
 
     php phpunit.phar GoogleTest.php
 
-###Selenium1 (RC) example
+### Selenium1 (RC) example
 You have google.html recorded in Selenium IDE:
 
     <?xml version="1.0" encoding="UTF-8"?>
@@ -223,7 +223,7 @@ And you get GoogleTest.php
     }    
 
 
-###PHPUnit built-in method for Selenium1 (RC)
+### PHPUnit built-in method for Selenium1 (RC)
 If you don't need php test files, see [PHPUnit Example](http://phpunit.de/manual/3.8/en/selenium.html#selenium.seleniumtestcase.examples.WebTest4.php)
 
     <?php
@@ -235,7 +235,7 @@ If you don't need php test files, see [PHPUnit Example](http://phpunit.de/manual
     }
     ?>
 
-###TestCase templates
+### TestCase templates
 You can add you php code to every TestCase file. For example, save screenshot on not successful test.
 
 File Selenium2TestCaseScreenshotTpl.tpl:
@@ -266,7 +266,7 @@ Run converting with option --output-tpl
 
     php selenium2php.php --selenium2 --browser=phantomjs --output-tpl=Selenium2TestCaseScreenshotTpl.tpl google.html
 
-###License
+### License
     Copyright 2013 Roman Nix
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
